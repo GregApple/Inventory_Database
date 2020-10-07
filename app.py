@@ -73,7 +73,9 @@ def add_product():
             try:    
                 eproduct_quantity = int(input("Please enter the product quantity. \n"))
                 try:                   
-                    Product.create(product_name = eproduct_name, product_price = eproduct_price, product_quantity = eproduct_quantity, date_updated = datetime.datetime.now().strftime("%m/%d/%Y"))
+                    Product.create(product_name = eproduct_name, product_price = eproduct_price, 
+                                   product_quantity = eproduct_quantity, 
+                                   date_updated = datetime.datetime.now().strftime("%m/%d/%Y"))
                 except IntegrityError:
                     product_record = Product.get(product_name=eproduct_name)
                     product_record.product_price = int(eproduct_price)
