@@ -66,25 +66,34 @@ def add_product():
 ##    """Create a function to handle adding a new product to the database. This function should prompt the user to enter the product's name, quantity, and price.
 ##    The function must process the user provided value for price from a string to an int.
 ##    Be sure the value you stored for the price field to the database is converted to cents ($2.99 becomes 299, for example)."""
-    eproduct_name = str(input("Please enter the product name. \n"))
-    eproduct_price = int(float(input("Please enter the product price without a dollar sign. \n"))*100)
-    eproduct_quantity = int(input("Please enter the product quantity. \n"))
-
-    try:                   
-        Product.create(product_name = eproduct_name, product_price = eproduct_price, product_quantity = eproduct_quantity, date_updated = datetime.datetime.now().strftime("%m/%d/%Y"))
-    except IntegrityError:
-        product_record = Product.get(product_name=eproduct_name)
-        product_record.product_price = int(eproduct_price)
-        product_record.product_quantity = int(eproduct_quantity)
-        product_record.date_updated = datetime.datetime.now().strftime("%m/%d/%Y")
-        product_record.save()
+    try:
+        eproduct_name = str(input("\nPlease enter the product name. \n"))
+        try:    
+            eproduct_price = int(float(input("Please enter the product price without a dollar sign. \n"))*100)
+            try:    
+                eproduct_quantity = int(input("Please enter the product quantity. \n"))
+                try:                   
+                    Product.create(product_name = eproduct_name, product_price = eproduct_price, product_quantity = eproduct_quantity, date_updated = datetime.datetime.now().strftime("%m/%d/%Y"))
+                except IntegrityError:
+                    product_record = Product.get(product_name=eproduct_name)
+                    product_record.product_price = int(eproduct_price)
+                    product_record.product_quantity = int(eproduct_quantity)
+                    product_record.date_updated = datetime.datetime.now().strftime("%m/%d/%Y")
+                    product_record.save()
+            except ValueError:
+                print("The format you used to enter the product quantity is invalid. \n")
+        except ValueError:
+            print("You used an invalid format to enter the product price. \n")
+    except ValueError:
+        print("You entered an invalid product name. \n")
   
 def view_product():
     """View a product by its product_id."""
 ##    """Create a function to handle getting and displaying a product by its product_id."""
     try:
         product_record = Product.get(product_id=input("Please enter a product id. \n"))
-        print(product_record.product_id, " | ",product_record.product_name, " | ", product_record.product_price," | ", product_record.product_quantity," | ", product_record.date_updated)
+        print("\n  Product ID: ", product_record.product_id, " \n ", "Product Name: ", product_record.product_name, " \n ", "Product Price: ", product_record.product_price,
+              " \n ", "Product Quantity: ", product_record.product_quantity," \n ", "Date Updated: ", product_record.date_updated, " \n ")
     except Product.DoesNotExist:
         print("You entered an invalid number. Please try again.\n")
     except ValueError:
@@ -118,3 +127,4 @@ if __name__ == '__main__':
     initialize()
     upload_database()
     menu_loop()
+
