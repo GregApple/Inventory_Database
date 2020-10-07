@@ -49,10 +49,10 @@ def upload_database():
         reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
             try:
-                Product.create(product_name = str(row['product_name']),    
-                product_price = int(float(row['product_price'][1:])*100),
-                product_quantity = int(row['product_quantity']),
-                date_updated = datetime.datetime.strptime(row['date_updated'],"%m/%d/%Y").strftime("%m/%d/%Y"))
+                Product.create(
+                        product_name = str(row['product_name']), product_price = int(float(row['product_price'][1:])*100),
+                        product_quantity = int(row['product_quantity']),
+                        date_updated = datetime.datetime.strptime(row['date_updated'],"%m/%d/%Y").strftime("%m/%d/%Y"))
             except IntegrityError:
                 product_record = Product.get(product_name=str(row['product_name']))
                 product_record.product_price = int(float(row['product_price'][1:])*100)
@@ -94,8 +94,10 @@ def view_product():
 ##    """Create a function to handle getting and displaying a product by its product_id."""
     try:
         product_record = Product.get(product_id=input("Please enter a product id. \n"))
-        print("\n  Product ID: ", product_record.product_id, " \n ", "Product Name: ", product_record.product_name, " \n ", "Product Price: ", product_record.product_price,
-              " \n ", "Product Quantity: ", product_record.product_quantity," \n ", "Date Updated: ", product_record.date_updated, " \n ")
+                        print("\n  Product ID: ", product_record.product_id, " \n ", "Product Name: ", 
+                        product_record.product_name, " \n ", "Product Price: ", product_record.product_price,
+                        " \n ", "Product Quantity: ", product_record.product_quantity," \n ", "Date Updated: ", 
+                        product_record.date_updated, " \n ")
     except Product.DoesNotExist:
         print("You entered an invalid number. Please try again.\n")
     except ValueError:
